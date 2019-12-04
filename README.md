@@ -1,12 +1,13 @@
 # what's this
 譜面ごとの最終プレー時間をCSVでダウンロードするツール  
-※要eamu課金
+※要eamu課金  
+PC版Chrome, Android版Chrome, iPadOS版safariで動作確認
 
 # how use
 
-1. 下のリンクをブックマーク
+1. 下のリンクをブックマークに登録
 1. eamusementにログインしDDR A20のページを開く
-1. 保存したブックマークを開く
+1. 保存したブックマークを開く（Androidはurlバーからブックマーク名を入力してタップ）
 
 # link
 ## level 15
