@@ -38,8 +38,10 @@ async function getHtml(id, diff){
 function parseHtmlToData(html, name){
   console.log(html);
   const dom = new DOMParser().parseFromString(html, "text/html");
+  console.log(dom.querySelector('#music_info tr td:nth-child(2)').innerHTML);
   return {
     music: name,
+    // music: dom.querySelector('#music_info tr td:nth-child(2)').innerHTML.replace(/<.*$/, ''),
     time: dom.querySelector('#music_detail_table tr:nth-child(4) td:nth-child(4)').textContent.trim()
   };
 }
