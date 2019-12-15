@@ -1,20 +1,21 @@
 import '@babel/polyfill';
 
-import datas from '../output/15.json';
+import songinfo from '../../resource/songdata/15.json';
 
-main(datas);
+main(songinfo);
 
-async function main(datas){
-  const promises = datas.map(async data => {
-    // diff:0～4
-    // const diff = data.diff ? data.diff : ['2','3','4'];
-    const times = await getTime(data.id, ['2','3','4']);
-    return {
-      name: times[0].name,
-      dif: times[0].time,
-      exp: times[1].time,
-      cha: times[2].time,
+async function main(songinfo){
+  // TODO: JSONを動的にとる
+  const promises = songinfo.map(async data => {
+    if(!data.id || !data.diff){
+      return {
+        name: '',
+        chart: '',
+        timestamp: ''
+      }
     }
+    const html = await getHtml(data.id, data.diff);
+    return parseHtmlToData(html, data.diff);
   });
 
   const result = await Promise.all(promises);
@@ -23,9 +24,9 @@ async function main(datas){
   const content = result.reduce((prev, current) => {
     return [
       prev,
-      `${current.name},${current.dif},${current.exp},${current.cha}`
+      `${current.name},${current.chart},${current.timestamp}`
     ].join('\n');
-  }, 'music,DIFFICULT,EXPERT,CHALLENGE');
+  }, 'music,chart,timestamp');
   console.log(content);
 
   const blob = new Blob([new Uint8Array([0xEF, 0xBB, 0xBF]), content], {'type': 'text/csv'});
@@ -33,27 +34,6 @@ async function main(datas){
   link.href = window.URL.createObjectURL(blob);
   link.download = 'sample.csv';
   link.click();
-}
-
-/**
- * IDと難易度からデータを取得する
- * @param {string} id 
- * @param {Array<number>} diff 
- * @returns {object}
- */
-async function getTime(id, diff){
-  console.log('getTime: ', id, diff);
-  const htmls = await Promise.all(
-    diff.map(async n => {
-      return getHtml(id, n);
-    })
-  );
-
-  const datas = htmls.map(html => {
-    return parseHtmlToData(html)
-  });
-  console.log(datas);
-  return datas;
 }
 
 /**
@@ -89,17 +69,38 @@ async function getHtml(id, diff){
  * @param {*} html
  * @returns string 
  */
-function parseHtmlToData(html){
+function parseHtmlToData(html, diff){
+  let chart;
+  switch(diff){
+  case 0:
+    chart = 'beginner'
+    break;
+  case 1:
+      chart = 'basic'
+      break;
+  case 2:
+      chart = 'difficult'
+      break;
+  case 3:
+      chart = 'expert'
+      break;
+  case 4:
+      chart = 'challenge'
+      break;
+  }
+
   const dom = new DOMParser().parseFromString(html, "text/html");
   if(!dom.querySelector('#music_detail_table tr:nth-child(4) td:nth-child(4)')){
     // 未プレイなど
     return {
       name: dom.querySelector('#music_info tr td:nth-child(2)').innerHTML.replace(/<.*$/, ''),
-      time: ''
+      chart: chart,
+      timestamp: ''
     }
   }
   return {
     name: dom.querySelector('#music_info tr td:nth-child(2)').innerHTML.replace(/<.*$/, ''),
-    time: dom.querySelector('#music_detail_table tr:nth-child(4) td:nth-child(4)').textContent.trim()
+    chart: chart,
+    timestamp: dom.querySelector('#music_detail_table tr:nth-child(4) td:nth-child(4)').textContent.trim()
   }
 }

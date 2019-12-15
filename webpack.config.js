@@ -2,10 +2,10 @@ const path = require('path');
 
 module.exports = {
   mode: "production",
-  entry: './src/outCsv.js',
+  entry: './src/download/main.js',
   output: {
     filename: 'main.js',
-    path: path.resolve(__dirname, 'dist')
+    path: path.resolve(__dirname, 'dist', 'download')
   },
   optimization: {
     usedExports: true
