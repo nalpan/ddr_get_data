@@ -1,37 +1,27 @@
-const axios = require('axios').default;
-const iconv = require('iconv-lite');
 const cheerio = require('cheerio');
+const fs = require('fs');
+const path = require('path');
+const fetchHtml = require('./fetchHtml.js');
 
-if(process.argv[2]){
-  main(process.argv[2]);
-}
 
-async function main(diff){
-  const urls = {
-    "19": ['https://p.eagate.573.jp/game/ddr/ddra20/p/music/index.html?offset=0&filter=2&filtertype=19&playmode=0',],
-    "18": ['https://p.eagate.573.jp/game/ddr/ddra20/p/music/index.html?offset=0&filter=2&filtertype=18&playmode=0',],
-    "17": ['https://p.eagate.573.jp/game/ddr/ddra20/p/music/index.html?offset=0&filter=2&filtertype=17&playmode=0',],
-    "16": [
-      'https://p.eagate.573.jp/game/ddr/ddra20/p/music/index.html?offset=0&filter=2&filtertype=16&playmode=0',
-      'https://p.eagate.573.jp/game/ddr/ddra20/p/music/index.html?offset=1&filter=2&filtertype=16&playmode=0',
-    ],
-    "15": [
-      'https://p.eagate.573.jp/game/ddr/ddra20/p/music/index.html?offset=0&filter=2&filtertype=15&playmode=0',
-      'https://p.eagate.573.jp/game/ddr/ddra20/p/music/index.html?offset=1&filter=2&filtertype=15&playmode=0',
-      'https://p.eagate.573.jp/game/ddr/ddra20/p/music/index.html?offset=2&filter=2&filtertype=15&playmode=0',
-    ]
+main(process.argv[2]);
+
+async function main(fileName){
+  let HTMLarr;
+  try{
+    HTMLarr = [fs.readFileSync(path.resolve(__dirname, '..', '..', 'resource', 'html', fileName))];
+  }catch(err){
+    console.log(`file not found`);
+    console.log(err);
+    HTMLarr = fetchHtml();
   }
-  const promises = urls[diff].map(async url => getHTML(url));
-
-  const HTMLarr = await Promise.all(promises);
-
   const infoList = HTMLarr.map(html => {
     const $ = cheerio.load(html);
     const songs = $(`#data_tbl .data`);
     const infos = [];
     songs.each((i, element) => {
       const src = $(element).find('img').attr('src').match(/=+?.*\&/)[0].replace(/(=|\&)/g, '');
-      const name = $(element).find('.music_tit').text();
+      const name = $(element).find('.data td:first-child .music_info').text();
       infos.push({id: src, name: name});
     });
 
@@ -41,12 +31,4 @@ async function main(diff){
 
   const result = [].concat(...infoList);
   console.log(JSON.stringify(result, null, '  '));
-}
-
-async function getHTML(url){
-  const res = await axios.get(url, {
-    responseType: 'arraybuffer'
-  });
-  // console.log(res.status);
-  return iconv.decode(res.data, 'sjis');
 }
