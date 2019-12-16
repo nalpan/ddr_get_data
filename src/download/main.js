@@ -1,11 +1,60 @@
 import '@babel/polyfill';
+import tingle from 'tingle.js';
+import 'tingle.js/dist/tingle.min.css';
 
-main();
+selectLevel();
 
-async function main(){
-  // TODO: レベルを取得する
-  const level = 15;
-  // TODO: JSONを動的にとる
+/**
+ * 
+ */
+function selectLevel(){
+  // instanciate new modal
+  var modal = new tingle.modal({
+    footer: true,
+    stickyFooter: false,
+    closeMethods: ['overlay', 'button', 'escape'],
+    closeLabel: "Close",
+    cssClass: ['custom-class-1', 'custom-class-2'],
+    onOpen: function() {
+        console.log('modal open');
+    },
+    onClose: function() {
+        console.log('modal closed');
+    }
+  });
+
+  // set content
+  modal.setContent(`
+    <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 20px;">select level</h1>
+    <select id="level-select" style="width: 100px; height: 30px; font-size: 16px; border: 1px solid silver;">
+      <option selected>15</option>
+      <option>16</option>
+      <option>17</option>
+      <option>18</option>
+      <option>19</option>
+    </select>
+  `);
+
+  // add a button
+  modal.addFooterBtn('download csv', 'tingle-btn tingle-btn--primary tingle-btn--pull-right', async function() {
+    const selectElm = document.querySelector('#level-select');
+    const level = Number(selectElm.value);
+    await downloadCSV(level);
+
+    const elm = document.querySelector('#timestamp-script');
+    elm.parentNode.removeChild(elm);
+    modal.destroy();
+  });
+
+  // open modal
+  modal.open();
+}
+
+/**
+ * 
+ * @param {*} level 
+ */
+async function downloadCSV(level){
   const infos = await getJson(level);
   const promises = infos.map(async data => {
     if(!data.id || !data.diff){
@@ -20,7 +69,6 @@ async function main(){
   });
 
   const result = await Promise.all(promises);
-  console.log(result);
 
   const content = result.reduce((prev, current) => {
     return [
@@ -28,12 +76,11 @@ async function main(){
       `${current.name},${current.chart},${current.timestamp}`
     ].join('\n');
   }, 'music,chart,timestamp');
-  console.log(content);
 
   const blob = new Blob([new Uint8Array([0xEF, 0xBB, 0xBF]), content], {'type': 'text/csv'});
   const link = document.createElement('a');
   link.href = window.URL.createObjectURL(blob);
-  link.download = 'sample.csv';
+  link.download = `${level}_timestamp.csv`;
   link.click();
 }
 
