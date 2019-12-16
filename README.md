@@ -10,19 +10,8 @@ PC版Chrome, Android版Chrome, iPadOS版safariで動作確認
 1. 下のリンクをブックマークに登録
 1. eamusementにログインしDDR A20のページを開く
 1. 保存したブックマークを開く（Androidはurlバーからブックマーク名を入力してタップ）
+1. レベルを選択する
+1. 「download csv」ボタンを押す ※処理のため少し画面が止まる
 
 ## link
-### level 15
-`javascript:(function(d,j,s){s=d.createElement('script');s.src=j;d.body.appendChild(s);})(document,'https://storage.googleapis.com/ddr-exscore-manager-bookmarklet/9th_kac_time/15.js')`
-
-### level 16
- `javascript:(function(d,j,s){s=d.createElement('script');s.src=j;d.body.appendChild(s);})(document,'https://storage.googleapis.com/ddr-exscore-manager-bookmarklet/9th_kac_time/16.js')`
-
-### level 17
-`javascript:(function(d,j,s){s=d.createElement('script');s.src=j;d.body.appendChild(s);})(document,'https://storage.googleapis.com/ddr-exscore-manager-bookmarklet/9th_kac_time/17.js')`
-
-### level 18
-`javascript:(function(d,j,s){s=d.createElement('script');s.src=j;d.body.appendChild(s);})(document,'https://storage.googleapis.com/ddr-exscore-manager-bookmarklet/9th_kac_time/18.js')`
-
-### level 19
-`javascript:(function(d,j,s){s=d.createElement('script');s.src=j;d.body.appendChild(s);})(document,'https://storage.googleapis.com/ddr-exscore-manager-bookmarklet/9th_kac_time/19.js')`
+`javascript:(function(d,j,s){s=d.createElement('script');s.src=j;s.id='timestamp-script';d.body.appendChild(s);})(document,'https://storage.googleapis.com/ddr-exscore-manager-bookmarklet/ddr_get_timestamp/main.js')`
