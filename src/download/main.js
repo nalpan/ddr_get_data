@@ -1,12 +1,13 @@
 import '@babel/polyfill';
 
-import songinfo from '../../resource/songdata/15.json';
+main();
 
-main(songinfo);
-
-async function main(songinfo){
+async function main(){
+  // TODO: レベルを取得する
+  const level = 15;
   // TODO: JSONを動的にとる
-  const promises = songinfo.map(async data => {
+  const infos = await getJson(level);
+  const promises = infos.map(async data => {
     if(!data.id || !data.diff){
       return {
         name: '',
@@ -37,6 +38,27 @@ async function main(songinfo){
 }
 
 /**
+ * 
+ * @param {*} level 
+ */
+async function getJson(level){
+  const res = await fetch(
+    `https://storage.googleapis.com/ddr-exscore-manager-bookmarklet/ddr_get_timestamp/json/${level}.json`,
+    {
+      headers:{
+        'Content-type':'application/json'
+      },
+      method:"get",
+    }
+  );
+
+  if(res.status !== 200){
+    throw new Error('request error');
+  }
+  return res.json();
+}
+
+/**
  * IDと難易度から譜面情報を取得する
  * @param {string} id 曲ID
  * @param {number} diff 難易度
@@ -54,14 +76,14 @@ async function getHtml(id, diff){
       method:"get",
     }
   );
-  const arrBuf = await res.arrayBuffer();
-  const decoder = new TextDecoder("Shift_JIS");
-  if(res.status === 200){
-    return decoder.decode(arrBuf);
-  }else{
+
+  if(res.status !== 200){
     return '';
   }
-  
+
+  const arrBuf = await res.arrayBuffer();
+  const decoder = new TextDecoder("Shift_JIS");
+  return decoder.decode(arrBuf);
 }
 
 /**

@@ -5,7 +5,8 @@
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npx webpack"
+    "clean": "rm -rf ./dist/*",
+    "build": "npm run clean && npx webpack"
   },
   "author": "",
   "license": "ISC",
