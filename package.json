@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rm -rf ./dist/*",
-    "build": "npm run clean && npx webpack"
+    "compress:data": "node jsonCompresser.js 15.json 16.json 17.json 18.json 19.json",
+    "build": "npm run clean && npx webpack && npm run compress:data"
   },
   "author": "",
   "license": "ISC",
