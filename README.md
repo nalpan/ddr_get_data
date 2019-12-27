@@ -15,3 +15,8 @@ PC版Chrome, Android版Chrome, iPadOS版safariで動作確認
 
 ## link
 `javascript:(function(d,j,s){s=d.createElement('script');s.src=j;s.id='timestamp-script';d.body.appendChild(s);})(document,'https://storage.googleapis.com/ddr-exscore-manager-bookmarklet/ddr_get_timestamp/main.js')`
+
+
+## update
+### 2019/12/28
+* DDR CHALLENGE Carnival 追加譜面対応
