@@ -73,7 +73,7 @@ async function downloadCSV(level){
   const content = result.reduce((prev, current) => {
     return [
       prev,
-      `${current.name},${current.chart},${current.timestamp}`
+      `"${current.name}","${current.chart}","${current.timestamp}"`
     ].join('\n');
   }, 'music,chart,timestamp');
 

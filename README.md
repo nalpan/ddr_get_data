@@ -20,3 +20,4 @@ PC版Chrome, Android版Chrome, iPadOS版safariで動作確認
 ## update
 ### 2019/12/28
 * DDR CHALLENGE Carnival 追加譜面対応
+* カンマ区切りを含む曲のレイアウトずれ修正
