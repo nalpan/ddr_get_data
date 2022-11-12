@@ -27,7 +27,7 @@
     "style-loader": "^1.0.1",
     "tingle.js": "^0.15.2",
     "webpack": "^4.35.2",
-    "webpack-cli": "^3.3.5"
+    "webpack-cli": "^3.3.12"
   },
   "dependencies": {}
 }
